@@ -2,7 +2,6 @@ import json
 import csv
 import os
 import re
-import random
 import matplotlib.pyplot as plt
 import logging  
 logging.basicConfig(level=logging.WARNING)

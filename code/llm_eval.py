@@ -1,5 +1,6 @@
 import argparse
 import json
+import jsonlines
 import os
 from tqdm import tqdm
 import logging  
@@ -7,16 +8,14 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 from gpt4_based_evaluation import acquire_discriminative_eval_input
-from openai import OpenAI
-
+import openai
 MAX_API_RETRY = 5
 
-def get_eval(user_prompt: str, max_tokens: int, api_key: str):
+def get_eval(user_prompt: str, max_tokens: int):
     logging.basicConfig(level=logging.INFO)
     for i in range(MAX_API_RETRY):
         try:
-            client = OpenAI(api_key=api_key)
-            response = client.chat.completions.create(
+            response = openai.ChatCompletion.create(
                 model='gpt-4',
                 max_tokens=max_tokens,
                 temperature=0.0,
@@ -26,6 +25,7 @@ def get_eval(user_prompt: str, max_tokens: int, api_key: str):
                 }],
             )
             content = response['choices'][0]['message']['content']
+
             logger.info(content)
             return content
         except Exception as e:
@@ -46,7 +46,6 @@ def get_json_list(file_path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='LLM-based evaluation.')
 
-    parser.add_argument('--api_key', type=str, required=True)
     parser.add_argument('--max_tokens', type=int, default=1024, help='maximum number of tokens produced in the output')
     parser.add_argument("--model_path", type=str, required=True)
     parser.add_argument("--constraint_types", nargs='+', type=str, default=['content', 'situation', 'style', 'format', 'mixed'])
@@ -73,11 +72,24 @@ if __name__ == '__main__':
     if not os.path.exists(args.gpt4_discriminative_eval_output_path):
         os.makedirs(args.gpt4_discriminative_eval_output_path)
 
+
     for constraint_type in args.constraint_types:
 
         eval_input = get_json_list(os.path.join(args.gpt4_discriminative_eval_input_path, "{0}_{1}_constraint.jsonl".format(args.model_path, constraint_type)))
-        
+
+        cachefile = f"cache/gpt4_eval_cache_{constraint_type}.json"
+        os.makedirs('cache', exist_ok=True)
+        if os.path.exists(cachefile):
+            cache = json.load(open(cachefile, 'r'))
+        else:
+            cache = {}
+
         with open(os.path.join(args.gpt4_discriminative_eval_output_path, "{0}_{1}_constraint.jsonl".format(args.model_path, constraint_type)), 'w') as output_file:
             for idx in tqdm(range(len(eval_input))):
-                response = get_eval(eval_input[idx]['prompt_new'], args.max_tokens, args.api_key)
+                if eval_input[idx]['prompt_new'] in cache:
+                    response = cache[eval_input[idx]['prompt_new']]
+                else:
+                    response = get_eval(eval_input[idx]['prompt_new'], args.max_tokens)
+                    cache[eval_input[idx]['prompt_new']] = response
                 output_file.write(json.dumps({'prompt_new': eval_input[idx]['prompt_new'], "choices": [{"message": {"content": response}}]}) + '\n')
+        json.dump(cache, open(cachefile, 'w'))

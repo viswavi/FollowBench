@@ -11,7 +11,7 @@ import json
 import torch
 
 from fastchat.model import load_model, get_conversation_template, add_model_args
-from utils import convert_to_api_input
+from data.FollowBench.code.utils import convert_to_api_input
 
 
 @torch.inference_mode()
