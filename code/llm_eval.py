@@ -7,8 +7,10 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-from gpt4_based_evaluation import acquire_discriminative_eval_input
 import openai
+
+from data.FollowBench.code.gpt4_based_evaluation import acquire_discriminative_eval_input
+
 MAX_API_RETRY = 5
 
 def get_eval(user_prompt: str, max_tokens: int):

@@ -6,8 +6,7 @@ import ast
 import matplotlib.pyplot as plt
 import string
 
-from utils import data_match_api_output
-
+from data.FollowBench.code.utils import data_match_api_output
 
 
 def rule_evaluation(data_path, api_output_path, constraint_type, model_name):

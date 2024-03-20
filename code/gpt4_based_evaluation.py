@@ -7,8 +7,8 @@ import logging
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
 
-from utils import data_match_api_output
-from rule_based_evaluation import rule_evaluation, csl_five_constraint, check_match
+from data.FollowBench.code.utils import data_match_api_output
+from data.FollowBench.code.rule_based_evaluation import rule_evaluation, csl_five_constraint, check_match
 
 
 
@@ -194,6 +194,7 @@ def acquire_discriminative_eval_input(data_path, api_output_path, constraint_typ
 
     data = data_match_api_output(data_path, api_output_path, constraint_type, model_name)
 
+
     with open(os.path.join(data_gpt4_discriminative_eval_input_path, "{0}_{1}_constraint.jsonl".format(model_name, constraint_type)), 'w', encoding='utf-8') as data_gpt_eval_input_file:
         with open(os.path.join(gpt4_discriminative_eval_input_path, "{0}_{1}_constraint.jsonl".format(model_name, constraint_type)), 'w', encoding='utf-8') as gpt_eval_input_file:
             
@@ -223,7 +224,6 @@ def acquire_discriminative_eval_input(data_path, api_output_path, constraint_typ
                         gpt_eval_input_file.write(json.dumps({
                                                     'prompt_new': globals()[f"{constraint_type}_evaluation_prompt"](evolve_instructions, data[i]['generation'])
                                                     })+ "\n")
-
 
 
 ############################################################################################################################################## HSR_SSR_evaluation
