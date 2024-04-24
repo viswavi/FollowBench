@@ -23,7 +23,6 @@ def inference(args, model_name = "gpt-3.5-turbo"):
                 data.append(json.loads(line))
 
         for i in tqdm(range(len(data))):
-            breakpoint()
             # Build the prompt with a conversation template
             msg = data[i]['prompt_new']
     
