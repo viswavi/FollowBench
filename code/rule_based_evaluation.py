@@ -297,7 +297,10 @@ def evaluate_example_constraint(data_path, api_output_path, model_name):
     for i in range(len(data)):
         for j in range(len(output)):
             if data[i]['instruction'] == output[j]['prompt_new']:
-                data[i]['generation'] = output[j]['choices'][0]['message']['content']
+                if isinstance(output[j]['choices'][0]['message'], str):
+                    data[i]['generation'] = json.loads(output[j]['choices'][0]['message'])['content']
+                else:
+                    data[i]['generation'] = output[j]['choices'][0]['message']['content']
                 break
             if j == len(output)-1 and data[i]['instruction'] != output[j]['prompt_new']:
                 print(i)
@@ -436,7 +439,10 @@ def csl_example_constraint(data_path, api_output_path, model_name):
     for i in range(len(data)):
         for j in range(len(output)):
             if data[i]['instruction'] == output[j]['prompt_new']:
-                data[i]['generation'] = output[j]['choices'][0]['message']['content']
+                if isinstance(output[j]['choices'][0]['message'], str):
+                    data[i]['generation'] = json.loads(output[j]['choices'][0]['message'])['content']
+                else:
+                    data[i]['generation'] = output[j]['choices'][0]['message']['content']
                 break
             if j == len(output)-1 and data[i]['instruction'] != output[j]['prompt_new']:
                 print(i)

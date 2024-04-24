@@ -194,7 +194,6 @@ def acquire_discriminative_eval_input(data_path, api_output_path, constraint_typ
 
     data = data_match_api_output(data_path, api_output_path, constraint_type, model_name)
 
-
     with open(os.path.join(data_gpt4_discriminative_eval_input_path, "{0}_{1}_constraint.jsonl".format(model_name, constraint_type)), 'w', encoding='utf-8') as data_gpt_eval_input_file:
         with open(os.path.join(gpt4_discriminative_eval_input_path, "{0}_{1}_constraint.jsonl".format(model_name, constraint_type)), 'w', encoding='utf-8') as gpt_eval_input_file:
             
