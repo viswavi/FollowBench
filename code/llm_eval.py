@@ -13,12 +13,15 @@ from data.FollowBench.code.gpt4_based_evaluation import acquire_discriminative_e
 MAX_API_RETRY = 5
 
 
-DEPLOYMENT_NAME = "vijay-gpt-4-sweden"
+DEPLOYMENT_NAME = "x"
 client = AzureOpenAI(
     # https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#rest-api-versioning
     api_version='2023-05-15',
     # https://learn.microsoft.com/en-us/azure/cognitive-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource
     azure_deployment=DEPLOYMENT_NAME,
+    #
+    api_key="x",  
+    azure_endpoint="https://x.openai.azure.com/"
 )
 
 def get_eval(user_prompt: str, max_tokens: int):
