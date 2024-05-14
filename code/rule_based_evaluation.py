@@ -21,14 +21,15 @@ def rule_evaluation(data_path, api_output_path, constraint_type, model_name):
     n_group = 0
 
     for i in range(len(data)):
+        generation = "None" if data[i].get('generation') is None else data[i]['generation']
         if data[i]['level'] > 0 and data[i]['source'] in rule_based_source:
             n_group += 1
             source = data[i]['source']
-            results[data[i]['level']-1] += globals()[f"rule_evaluation_{source}"](data[i]['generation'], data[i]['target'], data[i]['level'])
+            results[data[i]['level']-1] += globals()[f"rule_evaluation_{source}"](generation, data[i]['target'], data[i]['level'])
         
         if data[i]['level'] > 0 and data[i]['category'] == "format" and data[i]['example_id'] in [22, 30]:
             n_group += 1
-            results[data[i]['level']-1] += rule_evaluation_format(data[i]['generation'], data[i]['example_id'], data[i]['level'])
+            results[data[i]['level']-1] += rule_evaluation_format(generation, data[i]['example_id'], data[i]['level'])
     
     n_group = n_group // 5
 
@@ -382,13 +383,14 @@ def csl_five_constraint(data_path, api_output_path, constraint_type, model_name)
     n_group = 0
 
     for i in range(len(data)):
+        generation = "None" if data[i].get('generation') is None else data[i]['generation']
         if data[i]['level'] > 0 and data[i]['source'] in rule_based_source:
 
             if data[i]['level'] == 1:
                 consistency = []
             
             source = data[i]['source']
-            satisfy = globals()[f"rule_evaluation_{source}"](data[i]['generation'], data[i]['target'], data[i]['level'])
+            satisfy = globals()[f"rule_evaluation_{source}"](generation, data[i]['target'], data[i]['level'])
             consistency.append(satisfy)
 
             if data[i]['level'] == 5:
@@ -407,7 +409,7 @@ def csl_five_constraint(data_path, api_output_path, constraint_type, model_name)
             if data[i]['level'] == 1:
                 consistency = []
             
-            satisfy = rule_evaluation_format(data[i]['generation'], data[i]['example_id'], data[i]['level'])
+            satisfy = rule_evaluation_format(generation, data[i]['example_id'], data[i]['level'])
             consistency.append(satisfy)
 
             if data[i]['level'] == 5:
@@ -437,12 +439,13 @@ def csl_example_constraint(data_path, api_output_path, model_name):
 
     # match
     for i in range(len(data)):
+        generation = "None" if data[i].get('generation') is None else data[i]['generation']
         for j in range(len(output)):
             if data[i]['instruction'] == output[j]['prompt_new']:
                 if isinstance(output[j]['choices'][0]['message'], str):
-                    data[i]['generation'] = json.loads(output[j]['choices'][0]['message'])['content']
+                    generation = json.loads(output[j]['choices'][0]['message'])['content']
                 else:
-                    data[i]['generation'] = output[j]['choices'][0]['message']['content']
+                    generation = output[j]['choices'][0]['message']['content']
                 break
             if j == len(output)-1 and data[i]['instruction'] != output[j]['prompt_new']:
                 print(i)

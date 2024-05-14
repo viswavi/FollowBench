@@ -211,17 +211,17 @@ def acquire_discriminative_eval_input(data_path, api_output_path, constraint_typ
                 if data[i]['level'] > 0 and (data[i]['source'] not in rule_based_source):
 
                     if data[i]['category']!="format" or (data[i]['category']=="format" and data[i]['example_id'] not in [22, 30]):
-
+                        generation = "None" if data[i]['generation'] is None else data[i]['generation']
                         data_gpt_eval_input_file.write(json.dumps({
                                                     "example_id": data[i]['example_id'],
                                                     "category": data[i]['category'],
                                                     "source": data[i]['source'],
                                                     "level": data[i]['level'],
-                                                    'prompt_new': globals()[f"{constraint_type}_evaluation_prompt"](evolve_instructions, data[i]['generation'])
+                                                    'prompt_new': globals()[f"{constraint_type}_evaluation_prompt"](evolve_instructions, generation)
                                                     })+ "\n")
 
                         gpt_eval_input_file.write(json.dumps({
-                                                    'prompt_new': globals()[f"{constraint_type}_evaluation_prompt"](evolve_instructions, data[i]['generation'])
+                                                    'prompt_new': globals()[f"{constraint_type}_evaluation_prompt"](evolve_instructions, generation)
                                                     })+ "\n")
 
 
