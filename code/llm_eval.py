@@ -14,30 +14,23 @@ MAX_API_RETRY = 5
 
 
 DEPLOYMENT_NAME = "x"
-client = AzureOpenAI(
-    # https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#rest-api-versioning
-    api_version='2023-05-15',
-    # https://learn.microsoft.com/en-us/azure/cognitive-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource
-    azure_deployment=DEPLOYMENT_NAME,
-    #
-    api_key="x",  
-    azure_endpoint="https://x.openai.azure.com/"
-)
 
 def get_eval(user_prompt: str, max_tokens: int):
     logging.basicConfig(level=logging.INFO)
+
+    eval_client = openai.OpenAI(api_key=os.environ.get("LITELLM_API_KEY"),
+                                base_url="https://cmu.litellm.ai")
+
     for i in range(MAX_API_RETRY):
         try:
-
-
-            response = client.chat.completions.create(
-                model=DEPLOYMENT_NAME,
-                max_tokens=max_tokens,
-                temperature=0.0,
+            response = eval_client.completions.create(
+                model="neulab/gpt-4o-2024-05-13",
                 messages=[{
                     'role': 'user',
                     'content': user_prompt,
                 }],
+                max_tokens=max_tokens,
+                temperature=0.0,
             )
 
             content = response.choices[0].message.content
