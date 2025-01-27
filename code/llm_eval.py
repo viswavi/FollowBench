@@ -6,6 +6,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+import openai
 from openai import AzureOpenAI
 
 from data.FollowBench.code.gpt4_based_evaluation import acquire_discriminative_eval_input
