@@ -24,7 +24,7 @@ def get_eval(user_prompt: str, max_tokens: int):
 
     for i in range(MAX_API_RETRY):
         try:
-            response = eval_client.completions.create(
+            response = eval_client.chat.completions.create(
                 model="neulab/gpt-4o-2024-05-13",
                 messages=[{
                     'role': 'user',
