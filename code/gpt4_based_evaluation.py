@@ -231,7 +231,7 @@ def paring_discriminative_generation(generation, level):
     original_generation = generation
     try:
         if generation.strip().endswith("```") and "```python" in generation:
-            generation = generation.split("```python")[1].split("```")[0].strip()
+            generation = generation.split("```python")[-1].split("```")[0].strip()
         satisify = generation.strip().split('\n')[-1]
         if satisify.strip().startswith("3)"):
             satisify = satisify.split("3)")[-1].strip()
