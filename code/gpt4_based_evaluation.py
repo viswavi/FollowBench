@@ -228,10 +228,13 @@ def acquire_discriminative_eval_input(data_path, api_output_path, constraint_typ
 ############################################################################################################################################## HSR_SSR_evaluation
 
 def paring_discriminative_generation(generation, level):
+    original_generation = generation
     try:
         if generation.strip().endswith("```") and "```python" in generation:
             generation = generation.split("```python")[1].split("```")[0].strip()
         satisify = generation.strip().split('\n')[-1]
+        if satisify.strip().startswith("3)"):
+            satisify = satisify.split("3)")[-1].strip()
 
         if level == 1:
             if 'YES' in satisify:
@@ -260,7 +263,7 @@ def paring_discriminative_generation(generation, level):
                 raise Exception('Invalid list that cannot be parsed.')
 
     except Exception as e:
-        logger.error(f'{e}\nContent: {generation}\n'
+        logger.error(f'{e}\nContent: {original_generation}\n'
                      'You must manually fix the evaluation.')
         return -1, -1
 
