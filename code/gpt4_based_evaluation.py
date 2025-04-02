@@ -254,6 +254,8 @@ def paring_discriminative_generation(generation, level):
                             num_true += 1
                         elif i == 'NO':
                             num_true += 0
+                        elif i == 'PARTIALLY':
+                            num_true += 0
                         else:
                             raise Exception('Invalid element in the list.')
                     return int(num_true==level), num_true/level
