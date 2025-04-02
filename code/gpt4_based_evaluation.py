@@ -229,6 +229,8 @@ def acquire_discriminative_eval_input(data_path, api_output_path, constraint_typ
 
 def paring_discriminative_generation(generation, level):
     try:
+        if generation.startswith("```python"):
+            generation = generation.split('```python')[1].split("```")[0].strip()
         satisify = generation.strip().split('\n')[-1]
 
         if level == 1:
