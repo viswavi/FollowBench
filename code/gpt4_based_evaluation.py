@@ -235,7 +235,7 @@ def paring_discriminative_generation(generation, level):
         satisify = generation.strip().split('\n')[-1]
         if satisify.strip().startswith("3)"):
             satisify = satisify.split("3)")[-1].strip()
-        if satisify.strip().startswith("[") and satisify.strip().endswith("]") and '"' not in satisify:
+        if satisify.strip().startswith("[") and satisify.strip().endswith("]") and '"' not in satisify and "'" not in satisify:
             satisify = satisify.replace("YES", '"YES"').replace("NO", '"NO"').replace("PARTIALLY", '"PARTIALLY"')
 
         if level == 1:
